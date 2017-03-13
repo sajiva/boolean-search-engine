@@ -21,6 +21,10 @@ public class BooleanRetrieval {
 		i_map = formater.getInvMap();
 	}
 
+	public HashMap<String, Set<Integer>> getPostingList() {
+	    return invIndex;
+    }
+
 	public void createPostingList(){
 		//Initialze the inverted index with a SortedSet (so that the later additions become easy!)
 		for(String s:vocab){
@@ -37,6 +41,8 @@ public class BooleanRetrieval {
 				Get the existing posting list for this word w and add the new doc in the list. 
 				Keep in mind doc indices start from 1, we need to add 1 to the doc index , i
 				 */
+				invIndex.get(w).add(i + 1);
+
 			}
 
 		}

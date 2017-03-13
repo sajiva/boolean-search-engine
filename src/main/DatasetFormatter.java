@@ -88,7 +88,7 @@ public class DatasetFormatter {
 			}
 
 		}
-		System.out.println("Total number of documents in the corpus: " + documents.length);
+//		System.out.println("Total number of documents in the corpus: " + documents.length);
 
 		//Remove tokens appearing less than 5 times in the corpus and stopwords
 		HashSet<String> toRemove = new HashSet<>();
