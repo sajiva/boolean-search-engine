@@ -129,8 +129,8 @@ public class BooleanRetrieval {
 		return union(invIndex.get(a), invIndex.get(b));
 	}
 	
-	Set<Integer> not(Set<Integer> a){
-		TreeSet result = new TreeSet();
+	private Set<Integer> not(Set<Integer> a){
+		Set<Integer> result = new TreeSet<>();
 		/*
 		 Hint:
 		 NOT is very simple. I traverse the sorted posting list between i and i+1 index
@@ -145,6 +145,21 @@ public class BooleanRetrieval {
 		ArrayList<Integer> PostingList_a = new ArrayList<>(a);
 		int total_docs = docs.length;
 		// TO-DO: Implement the not method using above idea or anything you find better!
+        int i = 1;
+        int j = 0;
+
+
+        while (i <= total_docs) {
+            int k = (j == PostingList_a.size()) ? total_docs : PostingList_a.get(j);
+
+            while (i < k) {
+                result.add(i);
+                i++;
+            }
+            j++;
+            i++;
+        }
+
 		return result;
 	}
 
@@ -153,8 +168,9 @@ public class BooleanRetrieval {
 	}
 	
 	Set <Integer> evaluateAND_NOTQuery(String a, String b){
-		return intersection(invIndex.get(a), not(invIndex.get(b)));
+		return intersection(invIndex.get(a), evaluateNOTQuery(b));
 	}
+
 	public static void main(String[] args) throws Exception {
 
 		//Initialize parameters
