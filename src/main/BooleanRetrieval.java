@@ -63,13 +63,14 @@ public class BooleanRetrieval {
 		int j = 0;
 
 		while(i!=PostingList_a.size() && j!=PostingList_b.size()){
-
+            int x = PostingList_a.get(i);
+            int y = PostingList_b.get(j);
 			//TO-DO: Implement the intersection algorithm here
-            if (Objects.equals(PostingList_a.get(i), PostingList_b.get(j))) {
-                result.add(PostingList_a.get(i));
+            if (x == y) {
+                result.add(x);
                 i++;
                 j++;
-            } else if (PostingList_a.get(i) < PostingList_b.get(j)) {
+            } else if (x < y) {
                 i++;
             } else {
                 j++;
@@ -83,13 +84,44 @@ public class BooleanRetrieval {
 		return intersection(invIndex.get(a), invIndex.get(b));
 	}
 
-	Set<Integer> union(Set<Integer> a, Set<Integer> b){
+	private Set<Integer> union(Set<Integer> a, Set<Integer> b){
 		/*
 		 * IMP note: you are required to implement OR and cannot use Java Collections methods directly, e.g., .addAll whcih solves union in 1 line!
 		 * TO-DO: Figure out how to perform union extending the posting list intersection method discussed in class?
 		 */
-		TreeSet result = new TreeSet();
+        ArrayList<Integer> PostingList_a = new ArrayList<>(a);
+        ArrayList<Integer> PostingList_b = new ArrayList<>(b);
+		Set<Integer> result = new TreeSet<>();
 		// Implement Union here
+        int i = 0;
+        int j = 0;
+
+        while (i != PostingList_a.size() && j != PostingList_b.size()) {
+            int x = PostingList_a.get(i);
+            int y = PostingList_b.get(j);
+
+            if (x == y) {
+                result.add(x);
+                i++;
+                j++;
+            } else if (x < y) {
+                result.add(x);
+                i++;
+            } else {
+                result.add(y);
+                j++;
+            }
+        }
+
+        while (i < PostingList_a.size()) {
+            result.add(PostingList_a.get(i));
+            i++;
+        }
+
+        while (j < PostingList_b.size()) {
+            result.add(PostingList_b.get(j));
+            j++;
+        }
 		return result;
 	}
 

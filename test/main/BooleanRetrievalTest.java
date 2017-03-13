@@ -93,4 +93,39 @@ public class BooleanRetrievalTest {
 
         Assert.assertEquals(result, model.evaluateANDQuery("errors", "report"));
     }
+
+    @Test
+    public void testOrQuery1() {
+        Set<Integer> result = new TreeSet<>(Arrays.asList(19, 67, 122, 227, 313, 342, 377, 507, 659, 825, 846));
+
+        Assert.assertEquals(result, model.evaluateORQuery("youtube", "reported"));
+    }
+
+    @Test
+    public void testOrQuery2() {
+        Set<Integer> result = new TreeSet<>(Arrays.asList(115, 251, 471, 508, 674, 784, 821, 1068, 1080, 1111, 1158, 1245));
+
+        Assert.assertEquals(result, model.evaluateORQuery("errors", "report"));
+    }
+
+    @Test
+    public void testOrQuery3() {
+        Set<Integer> result = new TreeSet<>(Arrays.asList(3, 89, 147, 192, 235, 262, 336, 342, 558, 766, 864, 882, 1120, 1244));
+
+        Assert.assertEquals(result, model.evaluateORQuery("hell", "movie"));
+    }
+
+    @Test
+    public void testOrQuery4() {
+        Set<Integer> result = new TreeSet<>(Arrays.asList(46, 66, 113, 158, 227, 313, 342, 377, 507, 746, 846, 1248));
+
+        Assert.assertEquals(result, model.evaluateORQuery("youtube", "wifi"));
+    }
+
+    @Test
+    public void testOrQuery5() {
+        Set<Integer> result = new TreeSet<>(Arrays.asList(3, 12, 208, 254, 299, 359, 392, 410, 508, 686, 688, 933, 1066));
+
+        Assert.assertEquals(result, model.evaluateORQuery("address", "info"));
+    }
 }
