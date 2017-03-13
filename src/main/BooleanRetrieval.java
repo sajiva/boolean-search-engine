@@ -21,11 +21,11 @@ public class BooleanRetrieval {
 		i_map = formater.getInvMap();
 	}
 
-	public HashMap<String, Set<Integer>> getPostingList() {
+	HashMap<String, Set<Integer>> getPostingList() {
 	    return invIndex;
     }
 
-	public void createPostingList(){
+	void createPostingList(){
 		//Initialze the inverted index with a SortedSet (so that the later additions become easy!)
 		for(String s:vocab){
 			invIndex.put(s, new TreeSet<>());
@@ -48,7 +48,7 @@ public class BooleanRetrieval {
 		}
 	}
 
-	Set<Integer> intersection(Set<Integer> a, Set<Integer> b){
+	private Set<Integer> intersection(Set<Integer> a, Set<Integer> b){
 		/*
 		First convert the posting lists from sorted set to something we 
 		can iterate easily using an index. I choose to use ArrayList<Integer>.
@@ -56,15 +56,24 @@ public class BooleanRetrieval {
 		 */
 		ArrayList<Integer> PostingList_a = new ArrayList<>(a);
 		ArrayList<Integer> PostingList_b = new ArrayList<>(b);
-		TreeSet result = new TreeSet();
+		Set<Integer> result = new TreeSet<>();
 
 		//Set indices to iterate two lists. I use i, j
 		int i = 0;
 		int j = 0;
 
 		while(i!=PostingList_a.size() && j!=PostingList_b.size()){
-		
+
 			//TO-DO: Implement the intersection algorithm here
+            if (Objects.equals(PostingList_a.get(i), PostingList_b.get(j))) {
+                result.add(PostingList_a.get(i));
+                i++;
+                j++;
+            } else if (PostingList_a.get(i) < PostingList_b.get(j)) {
+                i++;
+            } else {
+                j++;
+            }
 
 		}
 		return result;

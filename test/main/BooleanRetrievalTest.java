@@ -72,4 +72,25 @@ public class BooleanRetrievalTest {
 
         Assert.assertEquals(null, model.getPostingList().get("great"));
     }
+
+    @Test
+    public void testAndQuery1() {
+        Set<Integer> result = new TreeSet<>(Arrays.asList(113, 158));
+
+        Assert.assertEquals(result, model.evaluateANDQuery("mouse", "wifi"));
+    }
+
+    @Test
+    public void testAndQuery2() {
+        Set<Integer> result = new TreeSet<>(Arrays.asList(80, 86, 348, 1029));
+
+        Assert.assertEquals(result, model.evaluateANDQuery("mouse", "scrolling"));
+    }
+
+    @Test
+    public void testAndQuery3() {
+        Set<Integer> result = new TreeSet<>();
+
+        Assert.assertEquals(result, model.evaluateANDQuery("errors", "report"));
+    }
 }
