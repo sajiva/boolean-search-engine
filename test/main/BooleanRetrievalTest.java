@@ -161,4 +161,5 @@ public class BooleanRetrievalTest {
 
         Assert.assertEquals(result, model.evaluateAND_NOTQuery("lenovo", "logitech"));
     }
+
 }
