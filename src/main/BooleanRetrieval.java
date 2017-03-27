@@ -23,10 +23,6 @@ public class BooleanRetrieval {
         i_map = formater.getInvMap();
     }
 
-    HashMap<String, Set<Integer>> getPostingList() {
-        return invIndex;
-    }
-
     void createPostingList() {
         //Initialze the inverted index with a SortedSet (so that the later additions become easy!)
         for (String s : vocab) {
@@ -39,15 +35,23 @@ public class BooleanRetrieval {
                 //Get the actual word in position j of doc i
                 String w = map.get(docs[i][j]);
 
-				/* TO-DO:
+				/*
 				Get the existing posting list for this word w and add the new doc in the list. 
 				Keep in mind doc indices start from 1, we need to add 1 to the doc index , i
 				 */
                 invIndex.get(w).add(i + 1);
 
             }
-
         }
+    }
+
+    public Set<Integer> getPostingList(String word) {
+        Set<Integer> plist = new TreeSet<>();
+
+        if (invIndex.containsKey(word))
+            plist = invIndex.get(word);
+
+        return plist;
     }
 
     private Set<Integer> intersection(Set<Integer> a, Set<Integer> b) {
@@ -56,9 +60,9 @@ public class BooleanRetrieval {
 		can iterate easily using an index. I choose to use ArrayList<Integer>.
 		Once can also use other enumerable.
 		 */
+        Set<Integer> result = new TreeSet<>();
         ArrayList<Integer> PostingList_a = new ArrayList<>(a);
         ArrayList<Integer> PostingList_b = new ArrayList<>(b);
-        Set<Integer> result = new TreeSet<>();
 
         //Set indices to iterate two lists. I use i, j
         int i = 0;
@@ -67,7 +71,7 @@ public class BooleanRetrieval {
         while (i != PostingList_a.size() && j != PostingList_b.size()) {
             int x = PostingList_a.get(i);
             int y = PostingList_b.get(j);
-            //TO-DO: Implement the intersection algorithm here
+            //Implement the intersection algorithm here
             if (x == y) {
                 result.add(x);
                 i++;
@@ -77,13 +81,12 @@ public class BooleanRetrieval {
             } else {
                 j++;
             }
-
         }
         return result;
     }
 
     Set<Integer> evaluateANDQuery(String a, String b) {
-        return intersection(invIndex.get(a), invIndex.get(b));
+        return intersection(getPostingList(a), getPostingList(b));
     }
 
     private Set<Integer> union(Set<Integer> a, Set<Integer> b) {
@@ -128,7 +131,7 @@ public class BooleanRetrieval {
     }
 
     Set<Integer> evaluateORQuery(String a, String b) {
-        return union(invIndex.get(a), invIndex.get(b));
+        return union(getPostingList(a), getPostingList(b));
     }
 
     private Set<Integer> not(Set<Integer> a) {
@@ -140,8 +143,6 @@ public class BooleanRetrieval {
 		 First convert the posting lists from sorted set to something we 
 		 can iterate easily using an index. I choose to use ArrayList<Integer>.
 		 Once can also use other enumerable.
-		 
-		 
 		 */
 
         ArrayList<Integer> PostingList_a = new ArrayList<>(a);
@@ -166,11 +167,11 @@ public class BooleanRetrieval {
     }
 
     Set<Integer> evaluateNOTQuery(String a) {
-        return not(invIndex.get(a));
+        return not(getPostingList(a));
     }
 
     Set<Integer> evaluateAND_NOTQuery(String a, String b) {
-        return intersection(invIndex.get(a), evaluateNOTQuery(b));
+        return intersection(getPostingList(a), evaluateNOTQuery(b));
     }
 
     private void writeToFile(String filename, String query, String result) {
@@ -201,14 +202,18 @@ public class BooleanRetrieval {
         switch (query_type) {
             case "PLIST":
                 query = args[1].toLowerCase();
-                result = invIndex.get(query).toString();
+                result = getPostingList(query).toString();
                 filename = args[2];
                 break;
 
             case "AND":
             case "OR":
-                if (args.length < 5 || !args[2].toUpperCase().equals(query_type)) {
+                if (args.length < 5) {
                     System.err.println(errorMsg);
+                    return;
+                }
+                if (!args[2].toUpperCase().equals(query_type)) {
+                    System.err.println("Error: Query does not match the query type.");
                     return;
                 }
 
@@ -221,10 +226,13 @@ public class BooleanRetrieval {
                 break;
 
             case "AND-NOT":
-                if (args.length < 6 ||
-                        !args[2].toUpperCase().equals("AND") ||
-                        !args[3].replace("(","").toUpperCase().equals("NOT")) {
+                if (args.length < 6) {
                     System.err.println(errorMsg);
+                    return;
+                }
+                if (!args[2].toUpperCase().equals("AND") ||
+                        !args[3].replace("(","").toUpperCase().equals("NOT")) {
+                    System.err.println("Error: Query does not match the query type.");
                     return;
                 }
 
@@ -236,7 +244,7 @@ public class BooleanRetrieval {
                 break;
 
             default:
-                System.err.println(errorMsg);
+                System.err.println("Error: Query type should be one of the 4 values: PLIST, AND, OR, AND-NOT.");
                 return;
         }
 

@@ -29,48 +29,49 @@ public class BooleanRetrievalTest {
     public void testPostingListFreeze() {
         Set<Integer> list = new TreeSet<>(Arrays.asList(129, 313, 442, 493, 912));
 
-        Assert.assertEquals(list, model.getPostingList().get("freeze"));
+        Assert.assertEquals(list, model.getPostingList("freeze"));
     }
 
     @Test
     public void testPostingListCtrl() {
         Set<Integer> list = new TreeSet<>(Arrays.asList(23, 47, 138, 232, 498, 882, 993, 1106, 1124, 1218));
 
-        Assert.assertEquals(list, model.getPostingList().get("ctrl"));
+        Assert.assertEquals(list, model.getPostingList("ctrl"));
     }
 
     @Test
     public void testPostingListWifi() {
         Set<Integer> list = new TreeSet<>(Arrays.asList(46, 66, 113, 158, 746, 1248));
 
-        Assert.assertEquals(list, model.getPostingList().get("wifi"));
+        Assert.assertEquals(list, model.getPostingList("wifi"));
     }
 
     @Test
     public void testPostingListCpu() {
         Set<Integer> list = new TreeSet<>(Arrays.asList(604, 800, 959, 1156));
 
-        Assert.assertEquals(list, model.getPostingList().get("cpu"));
+        Assert.assertEquals(list, model.getPostingList("cpu"));
     }
 
     @Test
     public void testPostingListTossed() {
         Set<Integer> list = new TreeSet<>(Arrays.asList(725, 730, 916, 983, 1178, 1183));
 
-        Assert.assertEquals(list, model.getPostingList().get("tossed"));
+        Assert.assertEquals(list, model.getPostingList("tossed"));
     }
 
     @Test
     public void testPostingListExcited() {
         Set<Integer> list = new TreeSet<>(Arrays.asList(9, 17, 147, 217, 318, 485, 523, 603, 745, 776, 884, 956, 1025, 1042, 1051, 1103, 1218));
 
-        Assert.assertEquals(list, model.getPostingList().get("excited"));
+        Assert.assertEquals(list, model.getPostingList("excited"));
     }
 
     @Test
     public void testPostingListGreat() {
+        Set<Integer> list = new TreeSet<>();
 
-        Assert.assertEquals(null, model.getPostingList().get("great"));
+        Assert.assertEquals(list, model.getPostingList("great"));
     }
 
     @Test
@@ -92,6 +93,13 @@ public class BooleanRetrievalTest {
         Set<Integer> result = new TreeSet<>();
 
         Assert.assertEquals(result, model.evaluateANDQuery("errors", "report"));
+    }
+
+    @Test
+    public void testAndQuery4() {
+        Set<Integer> result = new TreeSet<>();
+
+        Assert.assertEquals(result, model.evaluateANDQuery("errors", "bbbbb"));
     }
 
     @Test
@@ -127,6 +135,13 @@ public class BooleanRetrievalTest {
         Set<Integer> result = new TreeSet<>(Arrays.asList(3, 12, 208, 254, 299, 359, 392, 410, 508, 686, 688, 933, 1066));
 
         Assert.assertEquals(result, model.evaluateORQuery("address", "info"));
+    }
+
+    @Test
+    public void testOrQuery6() {
+        Set<Integer> list = new TreeSet<>(Arrays.asList(129, 313, 442, 493, 912));
+
+        Assert.assertEquals(list, model.evaluateORQuery("freeze", "bbbbbb"));
     }
 
     @Test
