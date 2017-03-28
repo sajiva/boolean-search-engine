@@ -195,7 +195,7 @@ public class BooleanRetrieval {
 
         String query_type = args[0].toUpperCase();
         String query;
-        String result;
+        String result = "";
         String filename;
         String[] words = new String[2];
 
@@ -208,6 +208,7 @@ public class BooleanRetrieval {
 
             case "AND":
             case "OR":
+            case "AND_NOT":
                 if (args.length < 5) {
                     System.err.println(errorMsg);
                     return;
@@ -220,31 +221,27 @@ public class BooleanRetrieval {
                 words[0] = args[1].toLowerCase();
                 words[1] = args[3].toLowerCase();
                 query = words[0] + " " + query_type + " " + words[1];
-                result = query_type.equals("AND") ?
-                        evaluateANDQuery(words[0], words[1]).toString() : evaluateORQuery(words[0], words[1]).toString();
+
+                switch (query_type) {
+                    case "AND":
+                        result = evaluateANDQuery(words[0], words[1]).toString();
+
+                        break;
+                    case "OR":
+                        result = evaluateORQuery(words[0], words[1]).toString();
+
+                        break;
+                    case "AND_NOT":
+                        result = evaluateAND_NOTQuery(words[0], words[1]).toString();
+
+                        break;
+                }
+
                 filename = args[4];
                 break;
 
-            case "AND-NOT":
-                if (args.length < 6) {
-                    System.err.println(errorMsg);
-                    return;
-                }
-                if (!args[2].toUpperCase().equals("AND") ||
-                        !args[3].replace("(","").toUpperCase().equals("NOT")) {
-                    System.err.println("Error: Query does not match the query type.");
-                    return;
-                }
-
-                words[0] = args[1].toLowerCase();
-                words[1] = args[4].replace(")", "").toLowerCase();
-                query = words[0] + " AND (NOT " + words[1] + ")";
-                result = evaluateAND_NOTQuery(words[0], words[1]).toString();
-                filename = args[5];
-                break;
-
             default:
-                System.err.println("Error: Query type should be one of the 4 values: PLIST, AND, OR, AND-NOT.");
+                System.err.println("Error: Query type should be one of the 4 values: PLIST, AND, OR, AND_NOT.");
                 return;
         }
 
@@ -259,33 +256,6 @@ public class BooleanRetrieval {
         model.createPostingList();
 
         model.evaluateQuery(args);
-
-        //Print the posting lists from the inverted index
-
-//        System.out.println("\nPrinting posting list:");
-//        for (String s : model.invIndex.keySet()) {
-//            System.out.println(s + " -> " + model.invIndex.get(s));
-//        }
-//
-//
-//        //Print test cases
-//
-//        System.out.println();
-//
-//        System.out.println("\nTesting AND queries \n");
-//        System.out.println("1) " + model.evaluateANDQuery("mouse", "keyboard"));
-//        System.out.println("2) " + model.evaluateANDQuery("mouse", "wifi"));
-//        System.out.println("3) " + model.evaluateANDQuery("button", "keyboard"));
-//
-//        System.out.println("\nTesting OR queries \n");
-//        System.out.println("4) " + model.evaluateORQuery("wifi", "scroll"));
-//        System.out.println("5) " + model.evaluateORQuery("youtube", "reported"));
-//        System.out.println("6) " + model.evaluateORQuery("errors", "report"));
-//
-//        System.out.println("\nTesting AND_NOT queries \n");
-//        System.out.println("7) " + model.evaluateAND_NOTQuery("mouse", "scroll"));
-//        System.out.println("8) " + model.evaluateAND_NOTQuery("scroll", "mouse"));
-//        System.out.println("9) " + model.evaluateAND_NOTQuery("lenovo", "logitech"));
 
     }
 
